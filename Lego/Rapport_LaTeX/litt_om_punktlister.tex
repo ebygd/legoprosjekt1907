@@ -1,0 +1,133 @@
+
+\chapter{Litt om punktlister}\label{kap:punktlister}
+
+Punktlister kan du lage med 
+\fbox{\tt $\backslash$itemize}- og
+\fbox{\tt $\backslash$enumerate}-kommandoene.
+
+\section{Bruk av \fbox{\tt $\backslash$itemize}}
+For å styre avstanden som er mellom punktene i en liste bruker du
+\fbox{\tt $\backslash$setlength$\backslash$itemsep\{\}}-kommandoen som
+du plasserer inne i mellom 
+\fbox{\tt $\backslash$begin\{itemize\}} og
+\fbox{\tt $\backslash$end\{itemize\}}.
+Følgende kode 
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{itemize}
+  \setlength\itemsep{0mm}
+  \item Dette er
+  \item en punktliste
+  \begin{itemize}
+    \setlength\itemsep{-2mm}
+    \item som går inn 
+    \item flere nivå
+  \end{itemize}
+  \item før den er tilbake igjen
+\end{itemize}
+\end{verbatim}
+\end{boxedminipage}
+
+gir denne punktlisten: 
+\begin{itemize}
+  \setlength\itemsep{0mm}
+  \item Dette er
+  \item en punktliste
+  \begin{itemize}
+     \setlength\itemsep{-2mm}
+     \item som går inn 
+     \item flere nivå
+   \end{itemize}
+ \item før den er tilbake igjen
+\end{itemize}
+
+Du kan også velge helt selv hva du vil at punktnummereringen skal
+være. For eksempel denne selvvalgte nummereringen
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{itemize}
+\item [3)] På tredje plass ...
+\item [2)] På andre plass ....
+\item [1)] På første plass ...
+\end{itemize}
+\end{verbatim}
+\end{boxedminipage}
+
+gir denne listen
+
+\begin{itemize}
+\item [3)] På tredje plass ...
+\item [2)] På andre plass ....
+\item [1)] På første plass ...
+\end{itemize}
+
+\newpage
+
+\section{Bruk av \fbox{\tt $\backslash$enumerate}}
+Listen {\tt enumerate} kan brukes på mange måter.
+\subsection{Tallbasert liste, standardversjonen}
+Ved å bruke {\tt enumerate} på følgende måte
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{enumerate}
+\item Dette er en standard
+\item tallbasert liste
+\end{enumerate}
+\end{verbatim}
+\end{boxedminipage}
+
+får vi  denne listen
+\begin{enumerate}
+\item Dette er en standard
+\item tallbasert liste
+\end{enumerate}
+
+\subsection{Bostavbasert liste}
+Enumerate-listen kan endre ved å spesifisere 
+andre tellemåter i hakeparentes bak {\tt
+  $\backslash$begin\{$\backslash$enumerate}\}. Følgende kode
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{enumerate}[a)]
+\item Dette er en 
+\item bokstavbasert liste
+\end{enumerate}
+\end{verbatim}
+\end{boxedminipage}
+
+gir denne listen
+\begin{enumerate}[a)]
+\item Dette er en 
+\item bokstavbasert liste
+\end{enumerate}
+
+\subsection{Romertallbasert liste}
+Alternativt kan vi bruke romertall som vist under.
+Følgende kode
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{enumerate}[i.]
+\item Dette er en 
+\item romertall liste
+\item 
+\item 
+\item 
+\end{enumerate}
+\end{verbatim}
+\end{boxedminipage}
+
+gir denne liste
+\begin{enumerate}[i.]
+\item Dette er en 
+\item romertall liste
+\item 
+\item 
+\item 
+\end{enumerate}
+
+

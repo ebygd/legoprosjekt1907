@@ -1,0 +1,194 @@
+\documentclass[11pt,a4]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[norsk]{babel}
+\renewcommand{\rmdefault}{cmss} 
+\usepackage{verbatim,amsmath}
+\usepackage{enumerate}
+\usepackage{fancyhdr,fancyvrb}
+\usepackage{graphicx,color,boxedminipage}
+\usepackage{ragged2e,colortbl,appendix}
+\usepackage{here,hyperref,multirow,pdfpages}
+
+\usepackage{xcolor}
+\usepackage{lipsum,todonotes} 
+
+
+
+\usepackage[../Prosjektfiler/DiverseFigurer/, 
+../Prosjektfiler/DiverseFigurer/overleaf/,
+../Prosjektfiler/MineFunksjoner/,
+../Prosjektfiler/Prosjekt01_NumeriskIntegrasjon/,
+../Prosjektfiler/Prosjekt02_Filtrering/,
+../Prosjektfiler/Prosjekt03_Derivasjon/,
+../Prosjektfiler/Prosjekt04_ManuellKjoring/,
+../Prosjektfiler/Prosjekt08_Turtallsregulering/]{figurepath} 
+
+
+% inkludering av kode 
+\usepackage{listings}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+% for å kunne skrive norske kommentarer i Matlab og vises i listingspakken
+\lstset{inputencoding=ansinew}
+
+
+\definecolor{darkgreen}{rgb}{0.0, 0.6, 0.0}
+\definecolor{darkred}{rgb}{0.6, 0.0, 0.0}
+\definecolor{gray}{rgb}{0.6, 0.6, 0.6}
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+
+% kan definere bredere tekstbredde og -høyde 
+\textwidth135mm
+\textheight195mm
+\parindent0mm  % ingen innrykk ved begynnelsen av avsnitt
+
+\setlength{\marginparwidth}{3cm}
+
+\begin{document}
+\setlength{\parskip}{0.5cm}   % denne lager 5mm avstand ved avsnitt
+\selectlanguage{norsk}
+
+% topptekst
+\pagestyle{fancyplain}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+\rhead{}
+\chead{}
+\cfoot{\bfseries\thepage}
+\lfoot{}
+\rfoot{}
+
+
+\renewcommand{\lstlistingname}{Kode}% Listing -> Kode
+
+
+% forsidetabell
+\begin{table}[hb]
+	\centering
+              \begin{tabular}{|l|lll|}\hline
+                \multicolumn{4}{|l|}{\hspace*{130mm}}\\
+                \multicolumn{4}{|l|}{ING100 Ingeniørfaglig innføringsemne}\\[-7mm]
+              \multicolumn{4}{|r|}{\scalebox{0.4}{\includegraphics{uis_nor_black}}}\\[15mm]
+                \multicolumn{4}{|c|}{\Huge \bf PROSJEKT - HØSTEN 2019
+                }\\[5mm]\hline
+                & & &  \\[-3mm]
+                Prosjekt- & \multicolumn{3}{|l|}{LEGO Mindstorms og MATLAB;} \\
+                oppgaven & \multicolumn{3}{|l|}{anvendt matematikk/
+                            fysikk og programmering i skjønn forening}\\[2mm]\hline
+                \multicolumn{4}{c}{}\\[5mm]\hline
+                & & &  \\[-3mm]
+                Gruppenummer & \multicolumn{3}{|l|}{\color{red}{19XX}} \\[2mm]\hline
+                & & &\\[-3mm]
+                Gruppens  & Navn  &  Studentnummer & Bilde\\
+                medlemmer  &   &   &  \\[2mm]
+                & Per & 6378983 & \scalebox{0.7}{\includegraphics{smiley}}\\[6mm]
+                & Pål & 6378984 & \scalebox{0.7}{\includegraphics{smiley}}\\[6mm]
+                & Eva & 6378985 & \scalebox{0.7}{\includegraphics{smiley}}\\[6mm]
+                & Anne & 6378986 & \scalebox{0.7}{\includegraphics{smiley}}\\\hline
+              \end{tabular}
+\end{table}
+
+
+% ingen sidetall på forsiden
+\thispagestyle{empty}
+
+\newpage
+
+% romerske tall før kap.1
+\pagenumbering{roman} 
+  
+% innholdsfortegnelse
+\addcontentsline{toc}{chapter}{\protect\numberline{}Innhold} 
+\tableofcontents
+
+\newpage
+
+\input{sammendrag.tex}
+
+\newpage
+
+% start vanlig nummering
+\pagenumbering{arabic}
+
+\input{chapter1.tex}
+
+\input{chapter2.tex}
+
+\input{chapter3.tex}
+
+\input{chapter4.tex}
+
+\input{chapter5.tex}
+
+\input{chapter6.tex}
+
+\input{litt_om_referering.tex}
+
+\input{litt_om_ligninger.tex}
+
+\input{litt_om_figurer.tex}
+
+\input{litt_om_tabeller.tex}
+
+\input{litt_om_punktlister.tex}
+
+\input{litt_om_kode.tex}
+
+
+\input{litt_om_overleaf.tex}
+
+
+\chapter{Konklusjon}\label{kap:konklusjon}
+Konklusjonen skal generelt være en kort oppsummering av
+problemstilling, hva som er gjort og resultatene som er oppnådd.
+
+
+\bibliographystyle{plain}
+\bibliography{referanser.bib}
+\addcontentsline{toc}{chapter}{Bibliografi} 
+
+\appendix
+
+\addcontentsline{toc}{chapter}{Vedlegg}
+\renewcommand{\appendixname}{Vedlegg}
+\renewcommand{\appendixpagename}{Vedlegg}
+
+
+
+\chapter{Timelister}\label{ch:vedlegg_A}
+
+
+\begin{table}[H]
+	\centering
+	\caption{Timelister for gruppe 19XX i faget ING100.}
+              \begin{tabular}{|c|c|c|c|c|c|}\hline
+                Navn/uke & Per & Pål 
+                &  Anne & Eva\\\hline\hline 
+	        40 & & & &  \\\hline
+	        41 & & & &  \\\hline
+	        42 & & & &  \\\hline
+	        43 & & & &  \\\hline
+	        44 & & & &  \\\hline
+	        45 & & & &  \\\hline
+	        46 & & & &  \\\hline\hline
+	        Sum & & & &  \\\hline
+	\end{tabular}
+	\label{tab:timeliste}
+\end{table}
+
+\chapter{Programlisting prosjekt 04}\label{ch:vedlegg_B}
+
+\section{P04\_F4\_MathCalculations.m}
+\section{P04\_F5\_CalculateAndSetMotorPower.m}
+
+\chapter{Programlisting prosjekt 05}\label{ch:vedlegg_C}
+\section{P05\_F4\_MathCalculations.m}
+\section{P05\_F5\_CalculateAndSetMotorPower.m}
+
+
+\end{document}
+
+

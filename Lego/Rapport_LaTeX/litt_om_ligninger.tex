@@ -1,0 +1,133 @@
+
+
+\chapter{Litt om ligninger}\label{kap:ligninger}
+
+\section{Bruk av \fbox{\tt equation}-miljøet}\label{delkap:equation}
+For å skrive ligninger i {\LaTeX} brukes \fbox{\tt equation}-miljøet
+på følgende måte: 
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{equation}
+  \label{eq:sinus}
+  y(t)=\sin(\omega t)
+\end{equation}
+\end{verbatim}
+\end{boxedminipage}
+
+som resulterer i følgende ligning hvor ligningsnummeret~\eqref{eq:sinus}
+kommer automatisk opp på høyre side av ligningen.
+\begin{equation}
+  \label{eq:sinus}
+  y(t)=\sin(\omega t)
+\end{equation}
+
+
+\section{Bruk av \fbox{\tt align}-miljøet}\label{delkap:align}
+For å sette flere ligninger over hverandre er 
+\fbox{\tt align} nyttig. Denne benytter tegnet {\&} for å markere
+hvilken plass i ligningene som skal {\em alignes}.
+I  eksemplet under er det likhetstegnet og 
+{\tt $\backslash$downarrow}  som skal stå
+over hverandre. For hver linjeslutt {\color{red}(utenom den siste
+  linjen)} må du indikere det med
+$\backslash\backslash$.
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{align}
+  y(t) & = \sin(\omega t) \tag{\ref{eq:sinus}} \\
+       & \downarrow \notag \\
+  y(t) & = \cos \Bigl( \omega t - \frac{\pi}{2} \Bigr) 
+         \label{eq:cosinus}
+\end{align}
+\end{verbatim}
+\end{boxedminipage}
+ 
+Resultatet av koden er vist under
+\begin{align}
+  y(t) & = \sin(\omega t) \tag{\ref{eq:sinus}}\\
+        & \downarrow \notag\\
+  y(t) & = \cos \Bigl(\omega t - \frac{\pi}{2}\Bigr) \label{eq:cosinus}
+\end{align}
+Noen kommentarer til resultatet:
+\begin{itemize}
+\item Legg merke til at ligningsnummeret~\eqref{eq:sinus} til den øverste ligningen er det
+  samme i ligningen i forrige delkapittel, og dette er gjort
+  ved å bruke \fbox{\tt $\backslash$tag\{\}}-funksjonen som manuelt {\em
+    tag}'er en ligning med ligningsnummeret til en annen ligning ved
+  bruk av \fbox{\tt $\backslash$ref\{\}}-funksjonen fra
+  kapittel~\ref{delkap:ref}. Denne måten å lage ligningsnummer på
+  brukes bare når ligningene er identiske, slik som de er i dette
+  tilfelle. 
+
+\item Videre ser du at {\tt $\backslash$downarrow}-pilen 
+  ikke har ligningsnummer (som er jo logisk), og
+  dette løses med \fbox{\tt $\backslash$notag}-funksjonen.
+
+\item Legg også merke til at selve sinus- og cosinusfunksjonene i ligningene~\eqref{eq:sinus} 
+  og \eqref{eq:cosinus} 
+  ser ut som vanlig stående tekst siden de skrives med kommandoen 
+  \fbox{\tt $\backslash$sin} og \fbox{\tt $\backslash$cos}.
+
+\item Legg merke til at siste linje IKKE skal ha
+  $\backslash\backslash$ på siste linje. Dersom du glemmer dette, vil det dukke opp
+  en tom linje med ligningsnummer.
+\end{itemize}
+
+
+
+\section{Bruk av matematikkmodus i rapporttekst, \$x\$}
+Når du i teksten skriver om variabler som brukes i ligningene må du
+huske å skrive disse i matematikkmodus, det vil si med dollartegn
+foran og etter symbolet. I ligning~\eqref{eq:sinus} brukes for eksempel tiden
+$t$, hvor {\LaTeX}-koden for å skrive tidsvariabel i matematikkmodus er \fbox{\tt \$t\$}.
+
+Unngå å skrive ligninger i selve teksten. Dette fordi det ofte er
+vanskelig å lese, og du kan heller ikke referere til ligningen senere
+i teksten. Bruk derfor {\tt $\backslash$begin\{equation\}} og 
+  {\tt $\backslash$end\{equation\}} for alle ligninger.
+
+
+\section{Bruk av vanlig tekst i ligninger, \fbox{\tt $\backslash$mathrm\{ \}}}
+Det er ikke ofte du har bruk for å skrive vanlig tekst i ligningene,
+men skal du gjøre dette kan du bruke 
+\fbox{\tt $\backslash$mathit\{\}} eller 
+\fbox{\tt $\backslash$mathrm\{\}} kommadoene. 
+Et eksempel på dette er vist i ligning~\eqref{eq:sin_og_cos}, hvor 
+\fbox{\tt $\backslash$underbrace\{\}}-kommandoen og 
+\fbox{\tt $\backslash$hspace*\{\}}-kommandoen  er brukt i \fbox{\tt
+  align}-miljøet. 
+
+\begin{boxedminipage}{160mm}
+\begin{verbatim}
+\begin{align}
+  y(t) & = \underbrace{\sin(\omega t)} 
+          + \underbrace{\cos(2 \pi f t)} \label{eq:sin_og_cos}\\
+       & \hspace*{5mm}\mathrm{Roman font} 
+         \hspace*{7mm}\mathit{Italic~font}\notag
+\end{align}
+\end{verbatim}
+\end{boxedminipage}
+
+som gir følgende resultat (legg merke til at du må bruke tilde for å
+lage mellomrom)
+\begin{align}
+  y(t)  &= \underbrace{\sin(\omega t)} 
+          + \underbrace{\cos(2 \pi f t)}   \label{eq:sin_og_cos} \\
+          & \hspace*{5mm}\mathrm{Roman font}
+            \hspace*{7mm}\mathit{Italic~font} \notag
+\end{align}
+
+\section{Bruk av \fbox{\tt $\backslash$hspace*\{ \}}}\label{delkap:hspace}
+I eksempelet over ble kommandoen \fbox{\tt $\backslash$hspace*\{\}}
+brukt.  Denne betyr {\em horisontal space}, og
+tilsvarende finnes det også \fbox{\tt $\backslash$vspace*\{\}} betyr 
+{\em vertical  space}. For at ikke {\LaTeX} skal ignorere dine ønsker
+å horisontal og vertikal avstand, MÅ du bruke {\tt *} slik som vist i
+koden over. 
+
+Husk at du kan flytte både til høyre/venstre og ned/opp ved å
+bruke hhv. positive og negative verdier, og du kan angi forflytningen
+i mm, cm, eller punkter pt.
+

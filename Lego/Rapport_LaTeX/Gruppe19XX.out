@@ -1,0 +1,98 @@
+\BOOKMARK [0][-]{Doc-Start}{Innhold}{}% 1
+\BOOKMARK [0][-]{chapter*.2}{Sammendrag}{}% 2
+\BOOKMARK [0][-]{chapter.1}{Numerisk integrasjon \(utf\370rt av hele gruppen\) }{}% 3
+\BOOKMARK [1][-]{section.1.1}{Problemstilling}{chapter.1}% 4
+\BOOKMARK [1][-]{section.1.2}{Forslag til l\370sning}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.3}{Resultat}{chapter.1}% 6
+\BOOKMARK [2][-]{subsection.1.3.1}{Integrasjon av en konstant}{section.1.3}% 7
+\BOOKMARK [2][-]{subsection.1.3.2}{Integrasjon av et sinussignal}{section.1.3}% 8
+\BOOKMARK [0][-]{chapter.2}{Filtrering \(utf\370rt av hele gruppen\)}{}% 9
+\BOOKMARK [1][-]{section.2.1}{Problemstilling}{chapter.2}% 10
+\BOOKMARK [1][-]{section.2.2}{FIR-filter}{chapter.2}% 11
+\BOOKMARK [2][-]{subsection.2.2.1}{Kode}{section.2.2}% 12
+\BOOKMARK [2][-]{subsection.2.2.2}{Resultat}{section.2.2}% 13
+\BOOKMARK [1][-]{section.2.3}{IIR-filter}{chapter.2}% 14
+\BOOKMARK [2][-]{subsection.2.3.1}{Kode}{section.2.3}% 15
+\BOOKMARK [2][-]{subsection.2.3.2}{Resultat}{section.2.3}% 16
+\BOOKMARK [1][-]{section.2.4}{Sammenligning}{chapter.2}% 17
+\BOOKMARK [0][-]{chapter.3}{Numerisk derivasjon \(utf\370rt av hele gruppen\)}{}% 18
+\BOOKMARK [1][-]{section.3.1}{Problemstilling}{chapter.3}% 19
+\BOOKMARK [1][-]{section.3.2}{Forslag til l\370sning}{chapter.3}% 20
+\BOOKMARK [1][-]{section.3.3}{Resultat}{chapter.3}% 21
+\BOOKMARK [2][-]{subsection.3.3.1}{Derivasjon av et line\346rt signal}{section.3.3}% 22
+\BOOKMARK [2][-]{subsection.3.3.2}{Derivasjon av et sinussignal}{section.3.3}% 23
+\BOOKMARK [0][-]{chapter.4}{Manuell kj\370ring av Lego-robot \(utf\370rt av hele gruppen\)}{}% 24
+\BOOKMARK [1][-]{section.4.1}{Problemstilling}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.2}{Forslag til l\370sning}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.3}{Resultat}{chapter.4}% 27
+\BOOKMARK [0][-]{chapter.5}{Automatisk kj\370ring av Legorobot \(utf\370rt av Anne og Kari\)}{}% 28
+\BOOKMARK [1][-]{section.5.1}{Problemstilling}{chapter.5}% 29
+\BOOKMARK [1][-]{section.5.2}{Forslag til l\370sning P-regulator}{chapter.5}% 30
+\BOOKMARK [1][-]{section.5.3}{Resultat}{chapter.5}% 31
+\BOOKMARK [1][-]{section.5.4}{Forslag til l\370sning PI-regulator}{chapter.5}% 32
+\BOOKMARK [1][-]{section.5.5}{Resultat}{chapter.5}% 33
+\BOOKMARK [1][-]{section.5.6}{Sammenligning}{chapter.5}% 34
+\BOOKMARK [0][-]{chapter.6}{Turtallsregulator, utf\370rt av Anne og P\345l}{}% 35
+\BOOKMARK [1][-]{section.6.1}{Problemstilling}{chapter.6}% 36
+\BOOKMARK [1][-]{section.6.2}{Forslag til l\370sning}{chapter.6}% 37
+\BOOKMARK [2][-]{subsection.6.2.1}{LEGO-konstruksjon}{section.6.2}% 38
+\BOOKMARK [2][-]{subsection.6.2.2}{Kode for beregning av vinkelhastighet}{section.6.2}% 39
+\BOOKMARK [2][-]{subsection.6.2.3}{Testing uten turtallsregulator}{section.6.2}% 40
+\BOOKMARK [2][-]{subsection.6.2.4}{Sammenheng mellom p\345drag og vinkelhastighet}{section.6.2}% 41
+\BOOKMARK [2][-]{subsection.6.2.5}{Kode for turtallsregulator}{section.6.2}% 42
+\BOOKMARK [1][-]{section.6.3}{Resultat}{chapter.6}% 43
+\BOOKMARK [2][-]{subsection.6.3.1}{P-regulator}{section.6.3}% 44
+\BOOKMARK [2][-]{subsection.6.3.2}{PI-regulator}{section.6.3}% 45
+\BOOKMARK [2][-]{subsection.6.3.3}{Integratorbegrensing}{section.6.3}% 46
+\BOOKMARK [2][-]{subsection.6.3.4}{PID-regulator}{section.6.3}% 47
+\BOOKMARK [2][-]{subsection.6.3.5}{Effekten av \345 kople inn turtallsregulatoren}{section.6.3}% 48
+\BOOKMARK [1][-]{section.6.4}{Turtallsregulator som funksjon}{chapter.6}% 49
+\BOOKMARK [0][-]{chapter.7}{Litt om referering til rapportelementer}{}% 50
+\BOOKMARK [1][-]{section.7.1}{Tagging av rapportelement, "026E30F label\173 \175ottheight-0.5 -widthheightdepthd- widthheightdepthheightted}{chapter.7}% 51
+\BOOKMARK [1][-]{section.7.2}{Tagging av kode, label= ottheight-0.5 -widthheightdepthd- widthheightdepthheightted}{chapter.7}% 52
+\BOOKMARK [1][-]{section.7.3}{Bruk av "026E30F ref\173 \175ottheight-0.5 -widthheightdepthd- widthheightdepthheightted, "026E30F eqref\173 \175ottheight-0.5 -widthheightdepthd- widthheightdepthheightted og "026E30F pageref\173 \175ottheight-0.5 -widthheightdepthd- widthheightdepthheightted}{chapter.7}% 53
+\BOOKMARK [1][-]{section.7.4}{Beskrivelse av litteratur}{chapter.7}% 54
+\BOOKMARK [2][-]{subsection.7.4.1}{@Bookottheight-0.5 -widthheightdepthd- widthheightdepthheightted}{section.7.4}% 55
+\BOOKMARK [2][-]{subsection.7.4.2}{@TechReportdaaheight-0.5 -widthheightdepthA- widthheightdepthheightEss2017}{section.7.4}% 56
+\BOOKMARK [2][-]{subsection.7.4.3}{@Miscdaaheight-0.5 -widthheightdepthA- widthheightdepthheightEss2017}{section.7.4}% 57
+\BOOKMARK [2][-]{subsection.7.4.4}{@Articleebbheight-0.5 -widthheightdepthw- widthheightdepthheightBibTex}{section.7.4}% 58
+\BOOKMARK [2][-]{subsection.7.4.5}{@InProceedingsebbheight-0.5 -widthheightdepthw- widthheightdepthheightBibTex}{section.7.4}% 59
+\BOOKMARK [2][-]{subsection.7.4.6}{@PhDThesisebbheight-0.5 -widthheightdepthw- widthheightdepthheightBibTex og @MastersThesisebbheight-0.5 -widthheightdepthw- widthheightdepthheightBibTex}{section.7.4}% 60
+\BOOKMARK [1][-]{section.7.5}{Referering til litteratur, "026E30F cite\173 \175ebbheight-0.5 -widthheightdepthw- widthheightdepthheightBibTex}{chapter.7}% 61
+\BOOKMARK [0][-]{chapter.8}{Litt om ligninger}{}% 62
+\BOOKMARK [1][-]{section.8.1}{Bruk av equationreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-milj\370et}{chapter.8}% 63
+\BOOKMARK [1][-]{section.8.2}{Bruk av alignreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-milj\370et}{chapter.8}% 64
+\BOOKMARK [1][-]{section.8.3}{Bruk av matematikkmodus i rapporttekst, \044x\044}{chapter.8}% 65
+\BOOKMARK [1][-]{section.8.4}{Bruk av vanlig tekst i ligninger, "026E30F mathrm\173 \175reeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{chapter.8}% 66
+\BOOKMARK [1][-]{section.8.5}{Bruk av "026E30F hspace*\173 \175reeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{chapter.8}% 67
+\BOOKMARK [0][-]{chapter.9}{Litt om figurer}{}% 68
+\BOOKMARK [1][-]{section.9.1}{Bruk av figurereeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-milj\370et}{chapter.9}% 69
+\BOOKMARK [1][-]{section.9.2}{MATLAB-figurer}{chapter.9}% 70
+\BOOKMARK [2][-]{subsection.9.2.1}{Format og st\370rrelse}{section.9.2}% 71
+\BOOKMARK [2][-]{subsection.9.2.2}{Funksjonen SaveMyFigure.mreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{section.9.2}% 72
+\BOOKMARK [2][-]{subsection.9.2.3}{Effekten av vindusst\370rrelse f\370r lagring}{section.9.2}% 73
+\BOOKMARK [2][-]{subsection.9.2.4}{Inkludering av LaTeX-tekst i MATLAB-figurene}{section.9.2}% 74
+\BOOKMARK [0][-]{chapter.10}{Litt om tabeller}{}% 75
+\BOOKMARK [1][-]{section.10.1}{Bruk av tablereeheight-0.5 -widthheightdepthD- widthheightdepthheight2019- og tabularreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-milj\370ene}{chapter.10}% 76
+\BOOKMARK [0][-]{chapter.11}{Litt om punktlister}{}% 77
+\BOOKMARK [1][-]{section.11.1}{Bruk av "026E30F itemizereeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{chapter.11}% 78
+\BOOKMARK [1][-]{section.11.2}{Bruk av "026E30F enumeratereeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{chapter.11}% 79
+\BOOKMARK [2][-]{subsection.11.2.1}{Tallbasert liste, standardversjonen}{section.11.2}% 80
+\BOOKMARK [2][-]{subsection.11.2.2}{Bostavbasert liste}{section.11.2}% 81
+\BOOKMARK [2][-]{subsection.11.2.3}{Romertallbasert liste}{section.11.2}% 82
+\BOOKMARK [0][-]{chapter.12}{Litt om inkludering av MATLAB-kode}{}% 83
+\BOOKMARK [1][-]{section.12.1}{Pakkene listingsreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019 og mcodereeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{chapter.12}% 84
+\BOOKMARK [2][-]{subsection.12.1.1}{Dynamisk med "026E30F lstinputlistingreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-kommandoen}{section.12.1}% 85
+\BOOKMARK [2][-]{subsection.12.1.2}{Statisk med "026E30F lstlistingreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019-kommandoen}{section.12.1}% 86
+\BOOKMARK [2][-]{subsection.12.1.3}{Pakken figurepathreeheight-0.5 -widthheightdepthD- widthheightdepthheight2019}{section.12.1}% 87
+\BOOKMARK [0][-]{chapter.13}{Litt om Overleaf}{}% 88
+\BOOKMARK [0][-]{chapter.14}{Konklusjon}{}% 89
+\BOOKMARK [0][-]{chapter*.31}{Bibliografi}{}% 90
+\BOOKMARK [0][-]{chapter*.31}{Vedlegg}{}% 91
+\BOOKMARK [0][-]{appendix.A}{Timelister}{}% 92
+\BOOKMARK [0][-]{appendix.B}{Programlisting prosjekt 04}{}% 93
+\BOOKMARK [1][-]{section.B.1}{P04\137F4\137MathCalculations.m}{appendix.B}% 94
+\BOOKMARK [1][-]{section.B.2}{P04\137F5\137CalculateAndSetMotorPower.m}{appendix.B}% 95
+\BOOKMARK [0][-]{appendix.C}{Programlisting prosjekt 05}{}% 96
+\BOOKMARK [1][-]{section.C.1}{P05\137F4\137MathCalculations.m}{appendix.C}% 97
+\BOOKMARK [1][-]{section.C.2}{P05\137F5\137CalculateAndSetMotorPower.m}{appendix.C}% 98
