@@ -1,0 +1,1153 @@
+
+
+\chapter{Turtallsregulator, utført av Anne og Pål}\label{kap:turtall}
+
+
+\section{Problemstilling}
+\todo[noline,size=\footnotesize]
+{Bruk alltid innledende tekst mellom overskrift og eventuelle figurer.}
+
+I dette prosjektet har målet vært å lage en turtallsregulator for
+LEGO-motorene. 
+Funksjonen til en turtallsregulator kan
+sammenlignes med en vanlig (ikke adaptiv)
+\todo[size=\footnotesize]{Engelske begrep skrives i
+  {\it kursiv} font.}
+{\em cruise controller}  i en bil,
+hvor hastigheten til bilen opprettholdes selv om bilen møter økt 
+motstand i form av en
+motbakke, 
+\todo[size=\footnotesize]{Referer alltid til figur før den kommer i teksten.}
+se illustrasjonen i
+figur~\ref{fig:motbakke}.
+
+\todo[noline,size=\footnotesize]{Enkel skisse/figur som illustrerer problemstillingen på
+  en gjenkjennende måte.
+  Et tegne\-program som kan være nyttig å lære seg er \fbox{inkscape}
+  som lager figurer i
+  vektor\-grafikk (bedre enn punkt\-grafikk).}
+
+
+\begin{figure}[H]
+  \centering
+  \scalebox{0.62}{\includegraphics{motbakke}}
+  \caption{En bil med {\em cruise controller} aktivert vil automatisk
+    holde samme hastighet, uansett om bilen kjører rett frem eller i en motbakke. } 
+  \label{fig:motbakke}
+\end{figure}
+For å få dette 
+til blir bilens målte hastighet sammenlignet med ønsket
+hastighet (som ofte er det samme for fartsgrensen), hvor forskjellen
+\todo[size=\footnotesize]{Variabelnavn som brukes i figur beskrives i
+  teksten, og fonten er den samme slik at leseren ser sammenhengen.}
+{\tt fartsavvik} (se figur~\ref{fig:neg_feedback}) brukes av regulatoren til å
+automatisk justere
+{\tt bensintilførselen} (pådraget). 
+\begin{figure}[H]
+  \centering
+  \scalebox{0.65}{\includegraphics{neg_feedback}}
+  \caption{Blokkskjema som viser prinsippet bak en {\em cruise
+      controller} i en bil. Forstyrrelsene som påvirker bilen vil for
+    eksempel være
+  motbakke, nedoverbakke, medvind og motvind.} 
+  \label{fig:neg_feedback}
+\end{figure}
+Dersom avviket mellom ønsket og målt fart f.eks.\ er postivt (det vil
+si at ønsket fart er større enn målt fart), vil regulatoren
+øke pådraget (bensintilførselen) helt til målt hastighet er lik ønsket
+hastighet (og motsatt dersom avviket er negativt)\footnote{Ved kjøring uten
+{\em cruise control} er det hjernen vår som utfører denne 
+reguleringsfunksjonen
+hvor høyrefoten justerer på gasspedalen (eller bremsen) for å oppnå ønsket hastighet.}.
+
+Prosjektet som er beskrevet/dokumentert i dette kapittelet 
+\todo[size=\footnotesize]{Eksempel på at noe er skrevet i fortid siden
+  arbeidet er allerede utført.}
+har gått ut på å lage 
+tilsvarene funksjonalitet for turtallsregulering av LEGO-motorene. 
+Dette kommer spesielt til nytte i de prosjektene hvor to motorer brukes til å
+kjøre roboten fremover, 
+og hvor {\em samme} pådrag blir gitt til {\em begge} motorene. Siden
+motorene ikke vil møte identisk motstand/friksjon langs veien, vil man 
+kunne oppleve at roboten utilsiktet svinger dersom vi ikke benytter en
+turtallsregulator.
+
+
+\section{Forslag til løsning}
+I dette
+\todo[size=\footnotesize]{Ved å bruke et par setninger i begynnelsen
+  av et kapittel hvor du beskriver hva kapittelet handler om, gjør du
+  leseren forberedt på innholdet.}
+kapittelet presenterer vi vårt forslag til løsning av prosjektet. Dette
+inkluderer en LEGO-konstruksjon som vi bygget for at 
+LEGO-motoren skulle kunne utsettes for relativt lik friksjon i
+forsøkene. I tillegg presenteres koden for å beregne vinkelhastighet
+og koden for å implementere PID-regulatoren. 
+
+\subsection{LEGO-konstruksjon}
+For
+\todo[size=\footnotesize]{Setninger som begynner med ``For å...'' gir
+  hensikt og motivasjon.}
+å kunne teste ut turtallsreguleringen i praksis, lagde vi
+følgende LEGO-konstruksjon, se figur~\ref{fig:friksjon}. 
+\begin{figure}[H]
+  \centering
+  \scalebox{0.5}{\includegraphics{friksjon2}}
+  \caption{Byggebeskrivelse for repeterbart å kunne 
+    tilføre noenlunde identisk friksjon på motoren.  a)~Aksling med avstandshylser
+    montert. b)~og c): Hjul montert
+    på begge sider av motoren. d):~Konstruksjon for å holde motoren
+    igjen på bordkanten. e):~Ultralydsensor montert foran motoren for
+    å registrere om konstruksjonen løftes opp fra bordet (friksjon fjernes). 
+    f)~Hele konstruksjonen sett ovenfra. 
+    \todo[inline,size=\footnotesize]{Figuren beskrives i caption ved å
+      referere til delfigurer.} } 
+  \label{fig:friksjon}
+\end{figure}
+Gummihjulene som er montert på motoren gjør det mulig å utsette
+motoren for friksjon når hele konstruksjonen hviler mot et bord. 
+Siden vekten av motoren og LEGO-delene ikke endres, er det mulig å få
+relativt  like friksjonsbetingelser under forskjellige eksperiment. 
+
+Ved å løfte på selve motoren mens den henger på bordkanten vil
+friksjonen
+forsvinnne. For å kunne registrere dette i datasettet,
+benyttes \todo[size=\footnotesize]{
+  Legg merke til at samme informasjon også
+  finnes i figurteksten til figur~\ref{fig:friksjon}, men at dette
+  ikke oppleves som unødvendig repetisjon.}
+ultralydsensoren (som måler avstand).
+Dersom motoren løftes og
+kjøres uten friksjon, vil avstand til bordet bli stor. Når
+konstruksjonen slippes ned på bordet, vil avstand til bordet bli
+liten. 
+
+
+Vi prøvde også å bruke trykkbryteren for å
+\reversemarginpar\todo[size=\footnotesize]{
+  Rapporten skal i hovedsak presentere løsningen som til slutt
+  fungerte. Dersom flere ting har vært utprøvd, er det viktig å {\bf
+    ikke} lage historiefortelling som: ``.....først så prøvde vi
+  trykkbryteren....... Deretter prøvde vi
+  ultralydsensoren....'', men heller først presentere det som virket,
+  og deretter nevne de tingene som ikke virket og en forklaring på
+  hvorfor de ikke virket.}
+registrere hvorvidt konstruksjonen hviler på bordet, men denne
+krevde litt for mye kraft for å bli trykket inn, og dermed oppsto det
+av og til feilmålinger.
+
+
+\subsection{Kode for beregning av vinkelhastighet}
+I dette delkapittelet presenterer vi først koden for å styre
+motorpådraget, og deretter koden for å beregne
+vinkelhastigheten og turtall ut fra avlest vinkelposisjon på motoren.
+
+For å styre en LEGO-motor (som ikke er turtallsregulert) 
+settes pådraget til
+en verdi på mellom $-100$ og $100$. Dette tallet kan tolkes til å ha
+enheten~[\%], hvor positivt verdi roterer ``fremover'', mens negativt tall roterer
+``bakover''.
+I uttestingsfasen av turtallsregulatoren
+benyttet vi {\em potensiometeret}
+(se figur~\ref{fig:potmeter})
+\reversemarginpar\todo[size=\footnotesize]{Figur~\ref{fig:potmeter}
+  kommer på toppen av neste side  
+  siden vi på denne figuren bruker [ht] istendenfor [H], se
+  {\LaTeX}-koden i chapter6.tex.}
+som pådrag til motoren.
+Dette fordi vi på denne måten
+kunne holde pådraget helt konstant/fast over en tidsperiode, men
+samtidig at det var enkelt å justere nivået på pådraget i
+samme eksperiment (som et sprang)\footnote{Alternativt kunne
+vi benyttet selve styrestikken, men denne er det 
+vanskelig å holde i en konstant posisjon. }. 
+Kodeutdraget under viser hvordan
+avlest potensiometerverdi
+\reversemarginpar\todo[size=\footnotesize]{I beskrivelsen av koden er det viktig at
+  variabelnavn skrives i samme font (gir gjenkjenning) og at det
+  hjelper leseren dersom du angir linjenummer. }
+{\tt  PotMeter(k)} (linje 1) benyttes direkte som 
+pådragsverdi til motor A, {\tt PowerA(k)} (linje 2). De to siste
+kommandolinjene starter motor A.
+\normalmarginpar\todo[size=\footnotesize]{Hele kodeutdraget består av
+  kodelinjer hentet fra  filene 
+{\tt  P08\_F3\_....} og 
+{\tt  P08\_F5\_...} og er presentert på en kompakt måte for leseren.}
+\begin{lstlisting}[caption=Kode for å bestemme
+og sette pådraget til motor A
+  (Mac-versjon), 
+  label=kode:padrag]
+  PotMeter(k) = -skalering*axis(joystick,4);
+  PowerA(k) = PotMeter(k);
+  motorA.Speed = PowerA(k);
+  start(motorA);   
+\end{lstlisting}
+
+\begin{figure}[ht] % plasseres nær her og i topp 
+  \centering
+  \scalebox{0.4}{\includegraphics{potmeter}}
+  \caption{Potensiometeret indikert med hvit ring benyttes som pådrag til
+    motoren.} 
+  \label{fig:potmeter}
+\end{figure}
+
+Prinsippet bak å beregne vinkel\-hastigheten (i enheten [grader/s])
+er å først avlese vinkelposisjonen til motor A (i enheten [grader]) og
+deretter derivere denne ved hjelp av derivasjonsfunksjonen fra 
+kapittel~\ref{kap:derivasjon}. Siden 
+vinkelposisjonsmålinger er befengt med støy (vil gi ubrukelig resultat
+etter derivering), så blir 
+disse først filterert. Kodeutdrag~\ref{kode:vinkelHast} viser
+nødvendig kode,
+\begin{lstlisting}[caption=Kode for beregning av vinkelhastighet til
+  motor A., label=kode:vinkelHast, firstnumber=5]
+VinkelPosA(k) = double(motorA.readRotation);
+alfa1 = 0.3;
+VinkelPosA_IIR(k) = IIR_filter(VinkelPosA_IIR(k-1),VinkelPosA(k),alfa1);
+VinkelHastA(k-1) = Derivation(VinkelPosA_IIR(k-1:k), Ts(k-1));
+\end{lstlisting}
+hvor
+\begin{itemize}
+  \setlength\itemsep{-1mm}
+\item {\tt  VinkelPosA(k)} i linje 5 er avlest vinkelposisjon.
+  \item Verdien på {\tt alfa1=0.3} i linje 6 ble funnet etter endel prøving og
+    feiling.
+\item {\tt  VinkelPosA\_IIR(k)} i linje 7 er filtrert vinkelposisjon.
+\item {\tt  VinkelHastA(k-1)} i linje 8 er beregnet vinkelhastighet.
+\end{itemize}
+
+Oppsummert kan det som skjer i
+kodeutdragene~\ref{kode:padrag} og \ref{kode:vinkelHast} presenteres som
+blokkskjemaet i delfigur a) figur~\ref{fig:open_sloyfe}. Delfigur b)
+er en komprimert versjon som vi gjenbruker senere når vi presentererer
+turtallsregulatoren. 
+\begin{figure}[H]
+  \centering
+  \scalebox{0.65}{\includegraphics{open_sloyfe}}
+  \caption{a): Blokkskjema over koden i
+    kodeutdragene~\ref{kode:padrag} og \ref{kode:vinkelHast}. b):~En komprimert fremstilling av
+    blokkskjemaet i a). } 
+  \label{fig:open_sloyfe}
+\end{figure}
+
+\subsection{Testing uten turtallsregulator}
+For å finne uten hvordan LEGO-motoren håndterte friksjon uten
+turtallsregulator, gjennomførte vi et eksperiment 
+hvor konstruksjonen i figur~\ref{fig:friksjon} ble løftet opp og lagt
+ned igjen på bordet ved forskjellige pådrag. Et typisk resultat er
+vist i  figur~\ref{fig:hastighet_uten}.
+
+I dette eksperimentet
+ble det benyttet 3 forskjellige pådrag,
+markert med $i$, $ii$ og $iii$ i delfigur~a). Midt i tidsperioden for 
+hver av de tre pådragene 
+ble LEGO-konstruksjonen løftet opp, og dette er
+markert med røde ringer i delfigur~d).
+ Når LEGO-konstruksjonen ligger på bordet er avstanden målt med
+ ultralydsensoren ca
+ 4~cm.
+
+ Delfigur~b) viser målt vinkelposisjon (IIR-filtrert), og siden motoren
+roterer samme vei gjennom hele eksperimentet, øker denne monotont. Det kan
+observeres at økning er størst i de periodene hvor LEGO-konstruksjonen
+er løftet opp fra bordet
+(market med piler).
+I løpet av
+eksperimentet som varer ett minutt, har motoren roteret 
+\todo[size=\footnotesize]{I teksten vises det tydelig til detaljer i
+  figuren slik at leseren slipper å lete i figuren etter det som
+  beskrives. Poenget med ligning (6.1) er bare for å relatere
+  tallverdien til noe leseren har et forhold til, og fungerer kanskje mer som {\em fun fact}.}
+ca $2.2{\cdot}10^{4}$ grader, noe som tilsvarer
+\begin{equation}
+  \label{eq:1}
+  \frac{22000}{360} \approx 60 \mathrm{~runder}
+\end{equation}
+
+\newpage
+\hspace*{0mm}\todo[size=\footnotesize]{Legg merke til at figuren har tydelige og
+  lesbare akseverdier, at aksene har tydelig benevning og titler som
+  beskriver hva som vises, at det inkluderes piler, tekst, sirkler og
+  andre elementer for å tydeliggjør sammenhenger. Dette forenkler også
+  mulighetene til å beskrive resultatene i rapportteksten.}
+\begin{figure}[H]
+  \centering
+  \hspace*{-10mm}\scalebox{0.93}{\includegraphics{hastighet_uten}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    hvordan friksjon endrer vinkelhastigheten på en
+    LEGO-motor uten turtallsregulator. a):~Pådragsverdier til LEGO-motoren, delt
+    inn i perioder markert med $i$, $ii$ og $iii$ hvor pådraget er
+    forskjellig, men konstant.
+    b):~Filtrert vinkelposisjon til
+    motor A. c):~Beregnet vinkelhastighet ut fra
+    de filtrerte målingene i~b). d):~Målinger fra
+    ultralydsensoren hvor periodene indikert med rød ring betyr at
+    LEGO-konstruksjonen i figur~\ref{fig:friksjon} er løftet opp fra
+    bordet. } 
+  \label{fig:hastighet_uten}
+\end{figure}
+
+Delfigur~c) viser den beregnede vinkelhastigheten i [grader/s], og
+vi ser at vinkelhastigheten halveres når LEGO-konstruksjonen hviler på
+bordet. Dette kan f.eks. ses ved de loddrette pilene ved tidspunkt
+\todo[size=\footnotesize]{Ved første øyekast i
+  delfigur c) ser du kanskje ikke at vinkelhastigheten halveres, men
+  ved å indikere tidspunkt og bruke piler (eller annet) hjelper du
+  leseren til å forstå resonnementet.}
+$t{=}10$ og $t=15$ sekund, hvor  
+vinkelhastigheten først er ca 600 grader/s (tilsvarer at roboten er løftet
+opp, se delfigur d)), og etter at roboten legges ned på bordet 
+reduseres vinkelhastighet til  ca 300 grader/s.
+
+
+\subsection{Sammenheng mellom pådrag og vinkelhastighet}
+Som vist i eksempelet med
+ {\em cruise controlleren} i 
+figur~\ref{fig:neg_feedback}, så føres {\em målingen} 
+\fbox{\tt målt fart} tilbake og sammenlignes 
+med {\em referansen} \fbox{\tt ønsket fart}. Sammenligningen
+innebærer en subtraksjon og beregning av {\em reguleringsavviket} 
+\fbox{\tt fartsavvik} som
+\begin{equation}
+  \label{eq:3}
+  \mathtt{fartsavvik}=
+  \mathtt{onsket~fart}-\mathtt{malt~fart}
+\end{equation}
+En forutsetning for å beregne dette avviket er lik benevningen 
+for referanse og måling, i dette tilfelle [km/t].
+På tilsvarende måte må referansen for
+turtallsregulatoren, \todo[size=\footnotesize]{Ved å ramme inn
+  variabelnavn tydeliggjør du symbolbruken som vises i figuren.}
+ \fbox{\tt ønsket vinkelhastighet}, ha samme
+benevning som \fbox{\tt målt vinkelhastighet}, dvs.\ [grader/s]. Dette er illustrert
+i figur~\ref{fig:neg_feedback_vinkel} hvor vi har tatt utgangspunkt i
+det komprimerte blokkskjema fra delfigur b) i
+figur~\ref{fig:open_sloyfe} og vist hvordan det prinsipielle
+blokkskjema for turtallsregulatoren vil se ut.
+\begin{figure}[H]
+  \centering
+  \hspace*{-10mm}\scalebox{0.6}{\includegraphics{neg_feedback_vinkel}}
+  \caption{Blokkskjema som viser hvordan LEGO-motoren fra
+    delfigur b) i figur~\ref{fig:open_sloyfe} 
+    må kobles opp
+    for å gå fra manuell til automatisk
+    turtallsregulering. Reguleringsteknisk fagterminologi er fra åpen
+    sløyfe til lukket sløyfe.} 
+  \label{fig:neg_feedback_vinkel}
+\end{figure}
+
+For at vi skulle kunne
+spesifisere oppnåelige verdier i \fbox{\tt ønsket vinkelhastighet},
+måtte vi derfor først finne {\bf maksimalt} oppnåelig vinkelhastighet på
+LEGO-motoren.  Dette ville da 
+være øvre\footnote{Og tilsvarende nedre med motsatt fortegn.}
+grense for referansen.
+Vi gjennomførte derfor et forsøk hvor vi rolig økte pådraget til
+motoren fra $-100$\% til $+100$\%, uten at vi tilførte friksjon på  motoren. 
+Resultatet fra dette forsøket er vist i
+figur~\ref{fig:power_vs_turtall}, hvor delfigur a)  viser pådraget
+\fbox{\tt PowerA} som
+funksjon av tid, delfigur b) viser beregnet vinkelhastighet 
+\fbox{\tt  VinkelHastA}, og
+delfigur c) viser sammenhengen mellom pådrag og vinkelhastighet, dvs.\
+\fbox{\tt  VinkelHastA} som funksjon av \fbox{\tt PowerA}. 
+\begin{figure}[H]
+  \centering
+  \hspace*{-10mm}\scalebox{0.9}{\includegraphics{power_vs_turtall}}
+  \caption{Resultater som viser sammenheng mellom {\tt PowerA} og
+    beregnet vinkelhastighet  {\tt VinkelHastA}. a): {\tt PowerA} som
+    funksjon av tid. b): {\tt VinkelHastA} som funksjon av tid. c):
+    {\tt VinkelHastA} som funksjon av {\tt PowerA}. } 
+  \label{fig:power_vs_turtall}
+\end{figure}
+
+Som vi kan se fra avlesningen i delfigur c), gir fullt positivt pådrag på motoren en
+vinkelhastighet på ca 857 [grader/s], men fullt negativt pådrag gir en
+vinkelhastighet på ca -836 [grader/s]. For å unngå {\em
+  windup}-problemer i reguleringen (se nedenfor), avrunder vi nedover
+og bestemmer at maksimal oppnåelig vinkelhastighet (uten friksjon) er $\pm 800$~[grader/s], dvs.
+\begin{align}
+  \mathtt{PowerA}&\mathtt{=\pm 100~[\%]} \notag \\
+  &\downarrow \notag \\
+  \mathtt{VinkelHastA}&=\mathtt{\pm 800~[grader/s]} \notag
+\end{align}
+Dette innebærer at den prinsipielle reguleringssløyfen i
+figur~\ref{fig:neg_feedback_vinkel}
+kan presenteres med mer detaljer som vist i
+delfigur a) i figur~\ref{fig:reg_sloyfe1}. Legg merke til at
+referansen\footnote{Referansen kalles også 
+{\em settpunkt} eller {\em skal-verdi}.}
+kalles \fbox{\tt Ref\_VinkelHastA}, siden målingen 
+kalles \fbox{\tt VinkelHastA}.
+
+\begin{figure}[H]
+  \centering
+  \hspace*{-15mm}\scalebox{0.65}{\includegraphics{reg_sloyfe1}}
+  \caption{a): Blokkskjema over turtallsregulatoren hvor verdiene til 
+    referansen \fbox{\tt Ref\_VinkelHastA} varierer mellom $\pm
+    800$~grader/s. b): Blokkskjema over turtallsregulatoren hvor verdiene til 
+    den relative referanse \fbox{\tt Ref\_TurtallA} varierer mellom $\pm
+    100$~\%. Legg merke til at friksjon/motstand er tegnet inn som en
+    forstyrrelse på motorblokken.
+    \todo[inline,size=\footnotesize]{Det gjør ingenting om figurene
+      dine bruker margene på begge sider, dersom dette trengs for å
+      gjøre de lesbare.}} 
+  \label{fig:reg_sloyfe1}
+\end{figure}
+For å forenkle bruken av turtallsregulatoren fant vi ut at det å
+normalisere vinkelhastigheten til en verdi mellom $\pm100$~\% gjorde
+det mye enklere å bytte mellom manuell og automatisk kjøring siden vi
+da slapp å måtte forholde oss til følgende veldig forskjellige benevninger:\\[-7mm]
+\begin{itemize}
+\setlength\itemsep{-1mm}
+\item pådrag i [\%] ved manuell kjøring av motoren og, 
+\item ønsket vinkelhastighet i [grader/s] ved automatisk kjøring
+\end{itemize}
+
+Ved å normalisere
+vinkelhastigheten med det absolutte variasjonsområdet
+$\pm800$~grader/s til et generelt 
+\fbox{turtall} med det relative variasjonsrområdet
+$\pm100$~\%, vil selve {\em verdien} vi forholder oss til i manuell og
+automatisk kjøring være identisk. Det betyr altså at 
+variasjonsområdet til pådraget/referansen vil være
+identisk, og forskjellen vil være hvorvidt
+turtallsregulatoren er aktiv eller ikke.
+
+
+
+Strukturen for denne turtallsregulatoren er vist i
+delfigur~b) i figur~\ref{fig:reg_sloyfe1}, hvor vi har lagt til en
+skaleringsblokk på $\frac{1}{8}$ etter derivasjonsrutinen. 
+Siden denne nye måleverdien
+representerer den generelle størrelsen 
+turtall i [\%], har vi endret utgangen og
+referansen til henholdsvis \fbox{\tt TurtallA} og 
+\fbox{\tt  Ref\_TurtallA}. Koden for å beregne {\tt TurtallA} baserer
+seg da på kodeutdrag~\ref{kode:vinkelHast} i tillegg til 
+følgende kode:
+\begin{lstlisting}[caption=Kode for å beregne {\tt TurtallA}.,
+  label=kode:rotHast, firstnumber=9]
+TurtallA(k-1) = 1/8*VinkelHastA(k-1);
+\end{lstlisting}
+
+Koden i dette kapittelet er plassert i {\tt
+  P0X\_F4\_MathCalculations.m}.
+\todo[size=\footnotesize]{Legg merke til at vi ikke viser koden for
+  ultralydsensoren som registrerer om LEGO-konstruksjonen løftes
+  opp. Dette fordi dette ikke er en viktig del av selve turtallsregulatoren.}
+
+
+
+
+\subsection{Kode for turtallsregulator}
+I dette delkapittelet blir koden for turtallregulatoren
+presentert. Den er basert på en standard industriell PID-regulator som 
+matematiske kan uttrykkes som i
+ligning~\eqref{eq:10a},
+\begin{align}
+ u(t) =&  u_{0} + \underbrace{K_P{\cdot} e(t)} + 
+             \underbrace{K_{I}\int_0^t e(t)dt} + 
+             \underbrace{K_D {\cdot}\frac{d}{dt} e_{f}(t)}   \label{eq:10a}\\
+ & \hspace*{14mm} \mathrm{P} \hspace*{20mm} \mathrm{I} 
+\hspace*{22mm} \mathrm{D} \notag
+\end{align}
+hvor 
+\begin{itemize}
+\setlength\itemsep{0mm}
+\item $u_{0}$ er basispådraget som for turtallsregulatoren
+  er satt lik 0.
+\item $e(t)$ er reguleringsavviket som er forskjell mellom referansen
+  og målingen
+\item $e_{f}(t)$ er filtrert reguleringsavvik
+\item $K_{P}$, $K_{I}$ og $K_{D}$ er regulatorparametre.  
+\item $u(t)$ er det beregnede totalpådraget 
+\item Bokstavene $\mathrm{P}$, $\mathrm{I}$ og  
+ $\mathrm{D}$ står for henholdsvis proporsjonaldel, integraldel og
+  derivat\-del. 
+\end{itemize}
+
+For å relatere disse generelle variablene og parametrene 
+til turtallsregulatoren vist
+som en PID-blokk i  figur~\ref{fig:reg_sloyfe1}b). 
+kan ligning~\eqref{eq:10a} skjematisk presenteres som
+figur~\ref{fig:pid_blokk}.
+\begin{figure}[H]
+  \centering
+  \hspace*{0mm}\scalebox{0.65}{\includegraphics{pid_blokk}}
+  \caption{Blokkskjema over turtallsregulatoren vist som PID-blokk i
+    figur~\ref{fig:reg_sloyfe1}b) og som er basert på
+    ligning~\eqref{eq:10a}. Bidragene {\tt P\_A(k)},  {\tt I\_A(k)} og  
+    {\tt D\_A(k)}  tilsvarer bidragene $\mathrm{P}$, $\mathrm{I}$ og  
+    $\mathrm{D}$ i ligning~\eqref{eq:10a}.} 
+  \label{fig:pid_blokk}
+\end{figure}
+Detaljer om koden for turtallsregulatoren er som følger:
+
+\begin{itemize}
+\setlength\itemsep{0mm}
+\item
+  Reguleringsavviket {\tt e\_TurtallA(k)}  beregnes først som differansen
+  mellom {\tt Ref\_TurtallA(k)} (som settes lik potensiometerposisjonen 
+  fra kode~\ref{kode:padrag}) og beregnet
+  turtall {\tt TurtallA(k-1)} fra
+  kode~\ref{kode:rotHast}. Dette er vist i kode~\ref{kode:e_RHA}.
+\begin{lstlisting}[caption=Beregning av reguleringsavviket {\tt e\_TurtallA(k)}., 
+  label=kode:e_RHA, firstnumber=15]
+  Ref_TurtallA(k) = PotMeter(k)
+  e_TurtallA(k) = Ref_TurtallA(k) - TurtallA(k-1);
+\end{lstlisting}
+Legg merke til at vi antar at beregnet turtall i forrige
+tidsskritt {\tt k-1} kan brukes til å beregne et avvik i nåværende
+tidsskritt {\tt k}.
+
+\item Proporsjonaldelen {\tt P\_A(k)} forsterker
+  reguleringsavviket med
+  parameteren $K_{P}$, se kodeutdraget under. 
+\begin{lstlisting}[caption={Beregning av P-delen for motor A, {\tt P\_A(k)}.}, 
+  label=kode:P_del, firstnumber=17]
+  P_A(k) = Kp*e_TurtallA(k);
+\end{lstlisting}
+  Dersom avviket {\tt e\_TurtallA(k)=0},  som jo egentlig er det vi ønsker å
+  oppnå, vil proporsjonaldelen også bli 0.  
+
+\item Integraldelen {\tt I\_A(k)} integrerer produktet av reguleringsavviket og 
+  integrasjonsforsterkningen $K_{I}$, se kodeutdraget under. 
+\begin{lstlisting}[caption={Beregning av I-delen  for motor A {\tt I\_A(k)}.}, 
+  label=kode:I_del, firstnumber=18]
+  I_A(k) = EulerForward(I_A(k-1), Ki*e_TurtallA(k-1), Ts(k-1));
+\end{lstlisting}
+Til dette bruker
+vi integrasjonsfunksjonen {\tt EulerForward} fra kapittel~\ref{kap:prosjekt01}.
+
+\item Derivatdel {\tt D\_A(k)} deriverer produktet mellom det
+  IIR-filtrerte reguleringsavviket og
+  derivasjonsforsterkningen $K_{D}$, se under. 
+\begin{lstlisting}[caption={Beregning av D-delen for motor A, {\tt D\_A(k)}.}, 
+  label=kode:D_del, firstnumber=19]
+  e_TurtallA_IIR(k) = IIR_filter(e_TurtallA_IIR(k-1), e_TurtallA(k), alfa2);
+  D_A(k) = Derivation(Kd*e_TurtallA_IIR(k-1:k), Ts(k-1));
+\end{lstlisting}
+Til dette bruker vi funksjonen {\tt Derivation} fra
+kapittel~\ref{kap:derivasjon}, med en $\alpha$-verdi {\tt alfa2}.
+
+\item Totalpådraget {\tt PowerA}(k) beregnes til slutt 
+  som summen av alle delpådragene
+  som vist i koden under
+  \begin{lstlisting}[caption=Kode for totalpådraget {\tt PowerA(k)} for motor A., 
+    label=kode:PID, firstnumber=21]
+    PowerA(k) = P_A(k)+I_A(k) + D_A(k);
+  \end{lstlisting}
+  I uttestingen av turtallsregulatoren, plottet vi alle
+  bidragene {\tt P\_A(k)},  {\tt I\_A(k)} og  {\tt D\_A(k)}  i figurer
+  slik at vi fikk innsikt i hvordan regulatoren fungerte.
+\end{itemize}
+
+Koden i dette kapittelet er plassert i {\tt P0X\_F5\_CalculateAndSetMotorPower.m}.
+
+\newpage
+
+\section{Resultat}
+I dette kapittelet blir resultatene fra testing av turtallsregulatoren
+presentert. Først presenteres resultatene for P-regulatoren med dens 
+begrensinger. Deretter presenteres resultatene for PI-regulatoren og vi
+dokumenterer behovet for integratorbegrensing. Til slutt presenteres 
+resultatene for PID-regulatoren.
+%, samt effekten av å justere de
+%forskjellige regulatorparametre $K_{P}$, $K_{I}$ og $K_{D}$.
+
+Resultatene består av tidsresponskurver som viser hvordan de forskjellige
+regulatorene klarer å opprettholde turtallet når LEGO-konstruksjonen
+blir løftet opp og ned fra bordet (på tilsvarende måte som vist i 
+figur~\ref{fig:hastighet_uten}). 
+For å stille inn regulatorene brukte vi prøve-og-feile metoden.
+
+
+\subsection{P-regulator}
+Den enkleste regulatoren er en P-regulator, og den består kun av koden
+vist i kodeutdrag~\ref{kode:P_del}. De beste resultatetene oppnådde vi
+ved å bruke {\tt alfa=0.3} og {\tt Kp=1}, og et eksempel på en kjøring
+er  vist i figur~\ref{fig:P_reg}. 
+Som vi ser fra delfigur b), klarer ikke P-regulatoren å 
+følge referansen siden lengden på dobbelpilene markert med røde ringer indikerer hvor stort
+reguleringssavviket \fbox{\tt e\_TurtallA} er. I tidspunktet rundt den
+første røde ringen ($t{\approx}12$~sekund) ligger motoren ned mot
+bordet og utsettes for friksjon som vist i delfigur
+d). Reguleringssavviket avlest i b) ved $t{\approx}12$~sekund er ca 
+\begin{equation}
+  \label{eq:5}
+  \mathtt{e\_{TurtallA}}\approx 65\%- 20\% = 45\%
+\end{equation}
+
+Den avleste pådragsverdien fra P-delen 
+i c) ved samme tidspunkt er ca 45\% (første røde ringen). 
+Dette  stemmer med uttrykket for en P-regulator når {\tt Kp=1}: 
+\begin{align}
+  \mathtt{P\_{A}} & = \mathtt{Kp} \cdot \mathtt{e\_{TurtallA}} \label{eq:p_reg}\\
+                          & =  45
+\end{align}
+En viktig observasjon fra ligning~\eqref{eq:p_reg} som er gyldig for
+P-regulatorer i sin alminnelighet er at for å oppnå et pådrag som i
+det hele tatt er større enn 0, må reguleringsavviket også være større
+enn 0.  Eller sagt med ord: Det må være
+avvik mellom ønskelig og virkelig turtall for at motoren i
+det hele tatt skal rotere.
+
+\begin{figure}[H]
+  \centering
+  \hspace*{0mm}\scalebox{0.88}{\includegraphics{P_reg}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    at P-regulatoren ikke klarer å følge referansen, verken med eller
+    uten friksjon. Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=0},
+    {\tt Kd=0}.
+    a):~Beregnede pådragsverdier fra P-regulatoren. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall [\%] (rødt). 
+    c):~Bidragene fra P-del (rødt) og totalpådraget {\tt
+      PowerA} (blått). 
+    d):~Avstandsmålinger fra ultralydsensoren.
+    Forklaring
+    til resultatene er gitt i teksten.} 
+  \label{fig:P_reg}
+\end{figure}
+
+
+Når LEGO-konstruksjonen
+løftes opp fra bordet ved $t{\approx}20$~sekund som vist i d),
+reduseres reguleringssavviket til $\mathtt{e\_TurtallA}{\approx}30$. 
+Årsaken til dette er at når 
+friksjonen forsvinner så roterer motoren lettere og 
+turtallet øker (rød kurve i b)).  
+Konsekvensen er altså at reguleringsavviket 
+reduseres (kortere dobbelpil i b)), men dermed reduseres også pådraget
+(rød kurve i c)).  Denne oppførselen stemmer med ligning~\eqref{eq:p_reg}.
+
+For å oppsummere, så viser resultatene 
+at en P-regulator ikke er i stand til å holde
+motorturtallet på en gitt referaseverdi, verken når den er påvirket eller
+upåvirket av friksjon. Ved å øke verdien av {\tt Kp} vil
+reguleringsavviket reduseres, men det vil aldri bli lik 0 som vi egentlig
+ønsker. For å få fjernet reguleringsavviket må vi benytte en
+PI-regulator, se neste delkapittel.
+
+\subsection{PI-regulator}
+Ved å gjennomføre et lignende eksperiment som for P-regulatoren, fikk vi 
+resultatene vist i figur~\ref{fig:turtallregulering}, hvor
+{\tt alfa1=0.3}, {\tt Kp=1} og {\tt Ki=2}. Resultatene
+er delt inn i tidsperiodene  $i$ og $ii$ som markerer to
+forskjellige referanseverdier, se blå kurve i b). 
+
+For å beskrive funksjonen til en PI-regulator, henvises det til
+tidsperiode $ii$. 
+Når LEGO-konstruksjonen er løftet opp fra bordet, 
+indikert med rød ring i~d), er totalpådraget i~a) ca 45\%  samtidig som både
+turtallet og referanseverdien i b) på ca 50\%. 
+Dette betyr  at regulatoren sørger for at virkelig 
+turtall blir lik ønsket turtall, og at
+reguleringsavviket 
+\begin{equation}
+  \label{eq:4}
+  \mathtt{e\_{TurtallA}}\approx 0
+\end{equation}
+Samtidig ser vi at P-delen markert med rød kurve i c) ikke bidrar til
+turtallet (er tilnærmet lik 0), noe som er
+forventet ut fra ligning~\eqref{eq:p_reg}. Videre ser vi at det som
+bidrar mest til pådraget {\tt PowerA} 
+(som i a) og c) er vist med blå kurve)
+er I-delen markert som grønn kurve i c). 
+\begin{figure}[H]
+  \centering
+  \hspace*{-5mm}\scalebox{0.77}{\includegraphics{turtallregulering}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    hvordan turtallregulatoren kompenserer for friksjon. Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=2},
+    {\tt Kd=0}.
+    a):~Beregnede pådragsverdier fra PI-regulatoren. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall [\%] (rødt). 
+    c):~Bidragene fra P-del (rødt) og I-del (grønt), og totalpådraget {\tt
+      PowerA} (blått). 
+    d):~Avstandsmålinger fra ultralydsensoren.
+    Forklaring
+    til resultatene er gitt i teksten.} 
+  \label{fig:turtallregulering}
+\end{figure}
+Når LEGO-konstruksjonen legges ned på bordet,
+markert med grønn ring i d),
+ser vi fra a) at regulatoren øker pådraget, men at
+turtallet etter en kort innsvingningsperiode følger
+referansen, markert med grønn ring i b). 
+
+
+\subsection{Integratorbegrensing}
+I dette delkapittel skal vi vise hva som skjer med en standard
+PI-regulator når regulatoren ikke klarer å holde utgangen lik
+referansen. En slik situasjon kan vi oppnå ved å sette referansen til
+100\% for deretter å legge LEGO-konstruksjonen ned på
+bordet. Friksjonen vil da bidra til at LEGO-motoren ikke klarer å
+holde 100\% turtall, og 
+dette er vist i grønn sirkel i figur~\ref{fig:windup}b), hvor
+tidsperioden  $23{<}t{<}50$~sekund er delt opp i følgende 
+5 delperioder hvor informasjonen lest ut fra delfigurene er listet opp
+i en slags kronologisk rekkefølge:
+
+\begin{enumerate}[1.]
+\item Gjelder for tidsperioden $23{<}t{<}27$.
+  \begin{itemize}
+  \item [d)]   LEGO-konstruksjonen er løftet
+    opp og motoren er uten  friksjon
+  \item [b)] Referansen og utgang er begge 100\% turtall og
+    reguleringsavviket er dermed0
+    \item [c)] Pådraget er rett i  underkant av 100\%   (markert med \fbox{max}).
+  \end{itemize} 
+  \todo[noline,size=\footnotesize]{Når figurene inneholder mye data som
+  er vanskelig for leseren å intuitivt forstå på egen hånd, er det
+  lurt å gi en god og detaljert forklaring på hva resultatene
+  viser. Dette viser også at DU har forstått hva som skjer. Dersom du
+  ikke gir gode forklaringer på resultater som er vanskelige å forstå,
+  vil ikke leseren heller forstå det og det teller negativt inn på
+  karakteren. }
+\item Gjelder for tidsperioden $27{<}t{<}35$.
+  \begin{itemize}
+  \item [d)]   LEGO-konstruksjonen hviler på
+  bordet og motoren utsettes for friksjon. 
+  \item [b)]  Referansen er fortsatt 100\% mens virkelig turtall
+    faller til ca. 75\% turtall. Reguleringsavviket er dermed på 25\% (vist med
+  loddrett dobbelpil)
+  \item [c)] Dette resulterer i at I-leddet integreres lineært.
+  \item [a)] Beregnet teoretisk pådrag øker tilsvarende opp til  ca
+    500\%, men pådraget er i realiteten ``kun'' 100\%.
+  \end{itemize}
+\item Gjelder for tidsperioden $35{<}t{<}38$.
+  \begin{itemize}
+  \item [d)]   LEGO-konstruksjonen er løftet
+  opp og motoren er uten
+  friksjon.
+  \item [b)]   Referansen er fortsatt 100\% mens virkelig turtall
+  stiger til ca.  105\% turtall som er det turtallet motoren kan oppnå
+  ubelastet ved fullt pådrag (tilsvarer vinkelhastighet på 857 avlest
+  i  delfigur c) i figur~\ref{fig:power_vs_turtall}).
+  Siden virkelig turtall er noe større enn referansen,
+  er reguleringsavviket negativt, altså
+  \begin{equation}
+    \mathtt{e\_{TurtallA}}\approx -5\%
+  \end{equation}
+\item [c)]   I denne perioden synker I-leddet fra ca 480 til ca 430
+\item [a)]  Totalpådraget synker tilsvarende som I-leddet
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \hspace*{-5mm}\scalebox{0.9}{\includegraphics{windup}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    hva som skjer dersom integratoren ikke begrenses når 
+    turtallregulatoren ikke klarer å følge referansen. Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=2},
+    {\tt Kd=0}.
+    a):~Beregnede pådragsverdier fra PI-regulatoren. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall (rødt). 
+    c):~Bidragene fra P-del (rødt) og I-del (grønt), og totalpådraget {\tt
+      PowerA} (blått). 
+    d):~Avstandsmålinger fra ultralydsensoren.
+    Forklaring
+    til resultatene er gitt i teksten.}
+  \label{fig:windup}
+\end{figure}
+\newpage
+\item Gjelder for tidsperioden $38{<}t{<}47$.
+  \begin{itemize}
+  \item [d)]   LEGO-konstruksjonen er
+  fortsatt løftet opp og motoren er uten
+  friksjon.
+  \item [b)] Referansen er redusert til ca. 90\% mens virkelig turtall
+  fortsatt er  105\% turtall
+  Dette gir et større negativt
+  reguleringsavvik på 
+  \begin{equation}
+      \mathtt{e\_{TurtallA}}\approx -15\%
+  \end{equation}
+  \item [c)] Dette gjør at I-leddet reduseres raskere enn i periode 3. 
+    Siden I-leddet fortsatt er større enn max pådrag på 100\% ligger
+  turtallet over referansen i hele denne perioden.\footnote{Hadde
+    dette vært en {\em cruise controller} til en svært tung bil som i
+    en oppoverbakke ikke klarte å holde fartsgrensen, ville bilen
+    kjørt mye over fartsgrensen når den passerte toppen av bakken.}
+  Legg merke til å P-delen er negativ og den prøver å redusere
+  turtallet. 
+\end{itemize}
+\item Gjelder for tidsperioden $47{<}t{<}50$.
+  \begin{itemize}
+  \item [d)]   LEGO-konstruksjonen er
+  fortsatt løftet opp og motoren er uten
+  friksjon
+ \item [b)] Referansen er fortsatt ca. 90\%,  men nå er virkelig
+   turtall også redusert til  90\% og reguleringsavviket er 0.
+ \item [c)]  I-leddet er nå redusert til under 100\%. P-leddet er ca
+   0\% siden reguleringsavviket er 0.
+ \end{itemize}
+\end{enumerate}
+
+
+Som eksperimentet viser, oppstår problemet i periode 2 hvor
+I-leddet integreres etter at pådraget er gått i metning og motoren
+ikke lenger klarer å følge referansen. 
+Siden integratoren ``må tømmes'' med negativt
+reguleringsavvik, vil virkelig turtall
+ligge over ønsket turtall i periode 3 og 4, og dette er en uønsket
+egenskap.  
+Løsningen er å forhindre at I-leddet integreres opp
+etter at I-leddet har passert 100\% nivå, og dette løste vi som vist i
+kodeutdrag~\ref{kode:antiwindup}.
+\begin{lstlisting}[caption=Kode for integratorbegrensing i turtallsregulatoren.,
+  label=kode:antiwindup, firstnumber=18]
+   I_A(k) = EulerForward(I_A(k-1), Ki*e_TurtallA(k-1), Ts(k-1));
+   if abs(I_A(k))>100
+       I_A(k)=I_A(k-1);
+   end
+\end{lstlisting}
+
+Ved å benytte denne koden i et lignende eksperiment som vist i
+figur~\ref{fig:windup}, fikk vi resultatene vist 
+i figur~\ref{fig:PI_anti_reg} hvor de 
+grønne ringene i markerer effekten av integratorbegrensingen. I
+delfigur d) blir 
+LEGO-konstruksjonen blir lagt ned på bordet i tidsperioden $17<t<24$.
+Samtidig faller turtallet i b) på samme måte som i periode~2 i
+figur~\ref{fig:windup} hvorpå det blir et vedvarende reguleringsavvik
+større enn 0,
+men integratorbegrensingen gjør at I-leddet stopper på 100\% i
+c). Når LEGO-konstruksjonen løftes opp fra bordet ved $t>24$, går
+turtallet opp til referansen med en gang, og
+reguleringsavviket er 0. 
+\begin{figure}[H]
+  \centering
+  \hspace*{-5mm}\scalebox{0.8}{\includegraphics{PI_anti_reg}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    effekten av integratorbegrensing.  Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=2},
+    {\tt Kd=0}.
+    a):~Beregnede pådragsverdier fra PI-regulatoren. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall (rødt). 
+    c):~Bidragene fra P-del (rødt) og I-del (grønt), og totalpådraget {\tt
+      PowerA} (blått). 
+    d):~Avstandsmålinger fra ultralydsensoren.
+    Forklaring
+    til resultatene er gitt i teksten.} 
+  \label{fig:PI_anti_reg}
+\end{figure}
+
+\subsection{PID-regulator}
+Ved å legge til D-delen av PID-regulatoren, vil totalpådraget få et
+bidrag som er bestemt ut fra hvor fort reguleringsavviket
+{\em endres}. 
+Resultatet fra et forsøk med en PID-regulator er vist i
+figur~\ref{fig:PID_reg}, hvor den største
+effekten av D-delen er markert med
+grønne og røde ringer.
+
+\begin{figure}[H]
+  \centering
+  \hspace*{0mm}\scalebox{0.71}{\includegraphics{PID_reg}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    hvordan PID-versjonen av turtallregulatoren kompenserer for friksjon. Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=2},
+    {\tt Kd=1}, {\tt alfa2=0.1}.
+    a):~Beregnede pådragsverdier fra PID-regulatoren. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall (rødt). 
+    c):~Bidragene fra P-del (rødt), I-del (grønt), D-del (svart) 
+    og totalpådraget {\tt
+      PowerA} (blått). 
+    d):~Avstandsmålinger fra ultralydsensoren.
+    Forklaring
+    til resultatene er gitt i teksten.} 
+  \label{fig:PID_reg}
+\end{figure}
+Følgende regulatorparametre er benyttet; 
+{\tt Kp=1}, {\tt Ki=2},   {\tt Kd=1}. I filteret som benyttes i
+derivatdelen benyttet vi {\tt alfa2=0.1}.
+
+Siden bidraget fra D-delen gjør seg gjeldene når reguleringsavviket
+endres, ser vi at den positive referanseendringen ved $t=7$ sekund
+(rød ring, delfigur b)) bidrar til at D-delen gir en positivt, men kortvarig
+bidrag (delfigur c)). Dette gjør at turtallet stiger raskere enn det
+ville gjort uten D-delen. Legg merke til at i a) så går totalpådraget
+over 100\% som betyr at regulatoren egentlig ikke får fullt utnyttet 
+effekten av D-delen.
+
+Derimot så viser responsen markert med grønne ringer et eksempel på
+at regulatoren får fullt utbytte av D-delen. Den negative
+referanseendringen gjør at D-delen bidrar med negative verdier (vist i
+c)), og at totalpådraget i a) går helt ned mot 40\% pådrag før den
+stabiliserer seg på 65\% mot slutten. Effekten på turtallet er at det
+faller raskere enn uten D-del.
+
+
+En siste viktig, men negativ, bi-effekt av D-delen er at 
+pådraget blir mer støyfylt når reguleringsavviket
+deriveres. Dette kan reduseres ved å filtrere enda kraftigere (lavere verdi
+på {\tt alfa2}). 
+
+
+
+
+
+
+
+\subsection{Effekten av å kople inn turtallsregulatoren}\label{kap:auto_manuell}
+
+
+For å få vist effekten av å kople inn og ut turtallsregulatoren under kjøring, bestemte
+vi oss for å benytte potensiometeret 
+både som direkte pådrag (i ``manuell'') og som 
+referanse (i ``auto''). 
+Dette er vist i 
+kodeutdrag~\ref{kode:turtall} hvor vi bestemmer funksjonen til
+turtallsregulatoren ved å trykke på en LEGO-trykkbryter. Er den
+inntrykket er regulatoren i manuell og
+pådraget til motoren settes til  potensiometerverdien. Dette er vist i
+linje 16 i koden under. 
+
+For å unngå problemer i plottingen av dataene ved at det mangler
+verdier i vektorene, setter vi {\tt P\_A(k)=NaN} og {\tt D\_A(k)=NaN}.
+I tillegg justerer vi kontinuerlig integratorleddets verdi som vist i
+linje 18. Dermed unngår vi at I-leddet integrerer seg opp eller ned mens vi kjører i
+manuell, og  i det vi kopler over til automatisk kjøring, vil regulatoren
+starte med samme pådrag som den hadde i manuell. Dette gir en såkalt
+støtfri omkopling, eller {\it bumpless transfer}. 
+\newpage
+\begin{lstlisting}[caption=Kode for turtallsregulator for motor A.,
+  label=kode:turtall, firstnumber=11]
+% trykknapp bestemmer om regulator er i auto eller manuel
+TurtallsReg(k) = ~Bryter(k);
+if TurtallsReg(k)
+   PowerA(k) = P_A(k)+I_A(k) + D_A(k);
+else
+   PowerA(k) = PotMeter(k);
+   P_A(k) = NaN;
+   I_A(k) = PowerA(k);
+   D_A(k) = NaN;
+end
+motorA.Speed = PowerA(k);
+start(motorA);   
+\end{lstlisting}
+
+Resultatet av  eksperimentet er vist i
+figur~\ref{fig:auto_man}, hvor LEGO-konstruksjonen har hvilt på bordet
+under hele eksperimentet (delfigur d)). Regulatoren er koplet ut
+i tidsperiodene merket
+med $i$ og $ii$. Vi observerer at turtallet faller i disse
+tidsperiodene, markert med grønne ringer i delfigur b).
+
+
+\begin{figure}[H]
+  \centering
+  \hspace*{0mm}\scalebox{0.71}{\includegraphics{auto_man}}
+  \caption{Målinger og beregninger fra et eksperiment som viser
+    effekten av å kople inn og ut
+    turtallsregulatoren. Turtallsregulatoren er utkoplet i
+    tidsperiodene merket med $i$ og $ii$. Følgende
+    parametre ble benyttet: {\tt alfa1=0.3}, {\tt Kp=1}, {\tt Ki=2},
+    {\tt Kd=1}, {\tt alfa2=0.1}.
+    a):~Beregnede pådragsverdier fra PID-regulatoren, samt manuelt
+    pådrag i periodene $i$ og $ii$. 
+    b):~Referanse fra potensiometerert (blått) og beregnet
+    turtall (rødt). 
+    c):~Bidragene fra P-del (rødt), I-del (grønt), D-del (svart) 
+    og totalpådraget {\tt
+      PowerA} (blått). Legg merke til at P-del og I-del er NaN i
+    perioden med manuelt pådrag. I-delen beholdes som manuelt pådrag
+    for å unngå store endringer ved innkopling. 
+    d):~Avstandsmålinger fra ultralydsensoren viser at LEGO-konstruksjonen har
+    ligget på bordet under hele forsøket.} 
+  \label{fig:auto_man}
+\end{figure}
+
+\newpage
+
+\section{Turtallsregulator som funksjon}\label{kap:funksjon}
+For å kunne bruke turtallsregulatorkoden på en enkel måte i
+prosjektene våre, laget vi en funksjon av koden. Vi har brukt
+  \todo[size=\footnotesize]{Bruk av {\it persistent} vil bli gått
+    gjennom i undervisningen. }
+{\it  peristent}-funksjonaliteten i MATLAB, og kan på den måten spare
+endel oversending av data i funksjonskallet.
+
+Siden variable som blir definert som {\it persistent} vil ligge
+tilgjengelig lokalt i funksjonen til neste gang den blir kallet, vil
+det ikke fungere å bruke samme funksjon til å beregne pådrag for flere
+motorer. Dette fordi tallverdiene for de forskjellige motorene vil bli
+blandet. Av den grunn har vi laget tre identiske funksjoner kalt
+\fbox{\tt CalcPowerA.m}, \fbox{\tt CalcPowerB.m} 
+og \fbox{\tt CalcPowerC.m}.
+
+Under blir koden til \fbox{\tt CalcPowerA.m} vist.
+I selve funksjonskallet sendes
+\begin{itemize}
+\item motorobjektet, for avlesing av vinkelposisjon inne i selve
+  funksjonen
+\item referansen, som tilsvarer enten ønsket turtall eller manuelt pådrag 
+\item regulatorfunksjonalitet, som P, PI, PD, I, PID eller manuell.
+\item regulatorparametre
+\end{itemize}
+
+Deretter spesifiseres de variable som er lokale for funksjonen, og
+standardverdier for regulatorparametre, se kodeutdrag~\ref{kode:turtall_mA}.
+
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:turtall_mA, firstnumber=18]
+function [u,varargout] = CalcPowerA(motorA,SpeedRef,action,varargin)
+
+persistent e e_IIR angle angle_IIR timestamp I 
+
+% default values of parameters
+Kp    = 1;
+Ki    = 2;
+Kd    = 1;
+umax  = 100;
+umin  = -100;
+alfa1 = 0.3; % angular velocity filtering
+alfa2 = 0.1; % error filtering in D-part
+\end{lstlisting}
+
+Dersom brukeren ønsker å sende inn andre regulatorparametre, kan dette
+sendes inn som \fbox{varargin} som inneholder en {\tt struct} med
+parameterverdier. For å overskrive standardverdiene vist over, brukes
+følgende kode:
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:para, firstnumber=31]
+  % If you have specified some parameters in main file, they will overwrite
+% the default values in this function
+if nargin>3
+    paranew=varargin{1};     
+    if isfield(paranew,'Kp')
+        Kp = paranew.Kp;
+    elseif isfield(paranew,'Ki')
+        Ki = paranew.Ki;
+    elseif isfield(paranew,'Kd')
+        Kd = paranew.Kd; 
+    elseif isfield(paranew,'umax')
+        umax = paranew.umax; 
+    elseif isfield(paranew,'umin')
+        umin = paranew.umin; 
+    elseif isfield(paranew,'alfa1')
+        alfa1 = paranew.alfa1; 
+    elseif isfield(paranew,'alfa2')
+        alfa2 = paranew.alfa2; 
+    end
+end
+\end{lstlisting}
+
+Ved bruk av {\it persistent} variable, trenger vi ikke ta vare på
+mer enn de  2 siste
+elementene i variablene. Ved å spesifisere element nr 2 i disse
+variablene til 0 som vist i kodeutdraget under,
+blir også element nr 1 satt lik 0 dersom den ikke
+allerede har et innhold.
+
+Ved aller første gangs kall av funksjonen har
+ikke element nr 1 innhold, men ved å flytte element nr 2 til element
+nr 1 i slutten av funksjonen (samme som å gå ett tidsskritt frem),
+vil element nr 1 ha innhold ved neste
+kall, og element nr 1 blir derfor ikke overskrevet til 0.
+
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:resten, firstnumber=31]
+angle(2)=0;
+angle_IIR(2)=0;
+e(2)=0;
+e_IIR(2)=0;
+I(2)=0;
+\end{lstlisting}
+
+Resten av koden tilsvarer det som er vist  i
+kodeutdragene~\ref{kode:vinkelHast}, \ref{kode:rotHast},
+\ref{kode:e_RHA}, \ref{kode:P_del}, \ref{kode:I_del},
+\ref{kode:D_del} og \ref{kode:PID}, og er vist i sin helhet under.
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:resten2, firstnumber=31]
+timestamp(2) = toc;
+Ts = timestamp(2)-timestamp(1); 
+angle(2)     = double(motorA.readRotation);
+angle_IIR(2) = IIR_filter(angle_IIR(1),angle(2),alfa1);
+angular_speed = Derivation(angle_IIR, Ts);
+speed = 1/8*angular_speed;
+e(2) = SpeedRef - speed;
+P = Kp*e(2);
+I(2) = EulerForward(I(1), Ki*e(1), Ts);
+if I(2)>umax
+    I(2)=I(1);
+elseif I(2)<umin
+    I(2)=I(1);
+end
+e_IIR(2) = IIR_filter(e_IIR(1), e(1), alfa2);
+D = Derivation(Kd*e_IIR, Ts);
+\end{lstlisting}
+
+Ut fra regulatorfunksjon, bestemmes deretter hvilket pådrag som skal
+beregnes. Valgene er P-regulator, PI, PID, PD, I eller manuell, se
+under.
+  \todo[noline,size=\footnotesize]{Siden innholdet i dette
+    delkapittelet blir veldig mye kode og lite beskrivende tekst,
+    merker du kanskje selv at du ikke bruker tid
+    på å lese denne delen. Det beste ville vært å ha en liten
+    introduksjon til tankegangen bak funksjonen, og legge hele
+    koden i et vedlegg. Dersom du opplever at deler av din egen
+    rapport ligner på akkurat denne siden her, vil leseren mest sannsynlig
+    bare hoppe over dette (sensor også).
+
+    Jeg har gjort dette med vilje her bare for at du skal se hvordan
+    rapporten IKKE skal se ut. }
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:resten3, firstnumber=31]
+if strcmp(action,'P') 
+    u = P;
+    I(2)=NaN;
+    D=NaN;
+elseif strcmp(action,'PI')
+    u = P + I(2);
+    D=NaN;
+elseif strcmp(action,'PID')
+    u = P + I(2) + D;
+elseif strcmp(action,'PD')
+    u = P + D;
+    I(2)=NaN;
+elseif strcmp(action,'I')
+    u = I(2);
+    P=NaN;
+    D=NaN;
+elseif strcmp(action,'man')
+    u = SpeedRef;
+    I(2)=SpeedRef;
+    P=NaN;
+    D=NaN;
+end
+\end{lstlisting}
+
+Til slutt flyttes dataene i element 2 til element 1, som innebærer det
+samme som å gå et tidsskritt frem. Samtidig gjøres variablene i
+\fbox{\tt varargout} klar, se  under.
+\begin{lstlisting}[caption=Kode fra funksjonen for turtallsregulering av motor A.,
+  label=kode:resten4, firstnumber=31]
+angle(1)     = angle(2);
+angle_IIR(1) = angle_IIR(2);
+e(1)         = e(2);
+e_IIR(1)     = e_IIR(2);
+timestamp(1) = timestamp(2);
+I(1)         = I(2);
+
+outputarg = [P,I(2),D];
+nout = max(nargout,1) - 1;
+for k = 1:nout
+   varargout{k} = outputarg(k);
+end
+
+
+\end{lstlisting}
+
+
+
+

@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{web_BibTex}
+How can {I} use bibtex to cite a web page?
+\newblock
+  https://tex.stackexchange.com/questions/3587/how-can-i-use-bibtex-to-cite-a-web-page.
+
+\bibitem{AdaEss2017}
+R.~A. Adams and C.~Essex.
+\newblock {\em Calculus. A complete course}.
+\newblock Pearson, 9 edition, 2017.
+
+\bibitem{Dre2019}
+T.~Drengstig.
+\newblock Lego mindstorms og matlab; anvendt matematikk og fysikk i skjønn
+  forening.
+\newblock Technical report, Universitet i Stavanger, 2019.
+\newblock Utdelt materiale.
+
+\end{thebibliography}

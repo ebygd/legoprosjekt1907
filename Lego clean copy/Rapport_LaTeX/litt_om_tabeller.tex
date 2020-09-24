@@ -1,0 +1,117 @@
+
+\chapter{Litt om tabeller}\label{kap:tabeller}
+
+\section{Bruk av \fbox{table}- og \fbox{tabular}-miljøene}
+
+Tabeller kan være vanskelig i \LaTeX. Under er det vist noen eksempler
+på tabeller slik at du kan bruke de som et utgangspunkt for dine egne
+tabeller.
+Husk at
+tabelltekst skal stå over tabellen, imotsetning til figurtekst som
+står under.
+
+Følgende kode gir tabell~\ref{tab:enkel_tab}
+som resultat. 
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+\begin{table}[H]
+  \centering
+  \caption{Enkel tabell.}
+  \begin{tabular}{|l|r c|r|c|}\hline
+    Venstrejustert & Høyrejustert & Sentrert 
+    &  Høyrejustert & Sentrert \\\hline\hline 
+    1.3434 & 0.55677 & 0.2 & 1.45   & 0.3     \\
+    2.5667 & 0.66    & 0.4 & 100.01 & 1.43435 \\\hline
+  \end{tabular}
+  \label{tab:enkel_tab}
+\end{table}
+\end{verbatim}
+\end{boxedminipage}
+
+\begin{table}[H]
+  \centering
+  \caption{Enkel tabell.}
+  \begin{tabular}{|l|r c|r|c|}\hline
+    Venstrejustert & Høyrejustert & Sentrert 
+    &  Høyrejustert & Sentrert \\\hline\hline 
+    1.3434 & 0.55677 & 0.2 & 1.45     & 0.3  \\
+    2.5667 & 0.66       & 0.4 & 100.01 & 1.43435  \\\hline
+  \end{tabular}
+  \label{tab:enkel_tab}
+\end{table}
+Hvert element i tabellen skilles med et \&-tegn, og det kan være
+nyttig å organiserer disse \&-tegnene oppå hverandre slik at tabellen
+er lettere å lese i .tex-fila.  
+
+
+Detaljene som er vist i følgende linje i koden over
+
+\begin{boxedminipage}{\textwidth}
+\begin{verbatim}
+  \begin{tabular}{|l|r c|r|c|}\hline
+\end{verbatim}
+\end{boxedminipage}
+
+betyr at tabellen skal inneholde 5 kolonner hvor
+\begin{itemize}
+\item  symbolet \fbox{|} betyr loddrett tabellstrek, 
+\item \fbox{\tt l} betyr {\em left} og dermed venstrejustert
+\item \fbox{\tt r} betyr {\em right} og dermed høyrejustert
+\item \fbox{\tt c} betyr {\em center} og dermed sentrert
+\item kommanoden \fbox{\tt $\backslash$hline} betyr {\em horisontal
+    line} og dermed vannrett tabellstrek
+\end{itemize}
+
+\newpage
+
+Koden for en litt mer avansert tabell er vist under og i 
+tabell~\ref{tab:avansert_tab}. Denne inneholder både 
+{\tt $\backslash$multirow}, 
+{\tt $\backslash$multicolumn}, 
+{\tt $\backslash$cellcolor}, 
+ og{\tt $\backslash$cline}. 
+
+\begin{boxedminipage}{160mm}
+\begin{verbatim}
+\begin{table}[H]
+  \centering
+  \renewcommand{\arraystretch}{1.2}
+  \caption{Parametre brukt i simuleringen.}
+  \begin{tabular}{|c||c|c||c|c|c|}\hline
+    \multirow{2}{*}{Controller} & \multicolumn{2}{c||}{Variables} 
+                                & \multicolumn{3}{c|}{Parameters}\\
+    \cline{2-6}
+    no. & \cellcolor[gray]{0.8} & & & &\\[-4mm]
+          & \cellcolor[gray]{0.8}  $h_{high}$ &$u_{high}$  & $k_{s}^{u}$  
+                                & $V_{max}^{u}$ &    $K_{M}^{u}$  \\[1mm]\hline
+    1 & \cellcolor[gray]{0.8} 0.55 & 0.49 & 0.01 & 0.0071  & 0.137 \\
+    2 & \cellcolor[gray]{0.8} 0.66 & 0.47 & 0.01 & 0.0177  & 0.797 \\\hline
+  \end{tabular}
+  \label{tab:avansert_tab}
+\end{table}
+\end{verbatim}
+\end{boxedminipage}
+
+\begin{table}[H]
+  \centering
+  \renewcommand{\arraystretch}{1.2}
+  \caption{Parametre brukt i simuleringen.}
+  \begin{tabular}{|c||c|c||c|c|c|}\hline
+    \multirow{2}{*}{Controller} & \multicolumn{2}{c||}{Variables} & \multicolumn{3}{c|}{Parameters}\\
+    \cline{2-6}
+    no. & \cellcolor[gray]{0.8} & & & &\\[-4mm]
+          & \cellcolor[gray]{0.8}  $h_{high}$ &$u_{high}$  & $k_{s}^{u}$  
+                                & $V_{max}^{u}$ &    $K_{M}^{u}$  \\[1mm]\hline
+    1 & \cellcolor[gray]{0.8} 0.55 & 0.49 & 0.01 & 0.0071  & 0.137 \\
+    2 & \cellcolor[gray]{0.8} 0.66 & 0.47 & 0.01 & 0.0177  & 0.797 \\\hline
+  \end{tabular}
+  \label{tab:avansert_tab}
+\end{table}
+
+Legg merke til at kommadoen
+{\tt $\backslash$renewcommand\{$\backslash$arraystretch\}\{1.2\}} 
+øker høyden med 20\% for hver rekke i tabellen. Legg også merke til at
+du kan flytte neste linje opp eller ned med å legge skrive en høyde i
+hakeparentes, f.eks.
+{\tt  [-4mm]}, bak linjeskiftkommandoen $\backslash$$\backslash$.
